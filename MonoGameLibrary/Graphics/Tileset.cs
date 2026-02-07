@@ -2,7 +2,7 @@
 {
     public class Tileset
     {
-        private readonly TextureRegion[]? _tiles;
+        private readonly TextureRegion[] _tiles;
 
         /// <summary>
         /// Gets the width, in pixels, of each tile in this tileset.
@@ -41,14 +41,16 @@
             TileHeight = tileHeight;
             Columns = textureRegion.Width / tileWidth;
             Rows = textureRegion.Height / tileHeight;
-            Columns = Columns * Rows;
+            Count = Columns * Rows;
 
             // Create the texture regions that make up each individual tile.
+            _tiles = new TextureRegion[Count];
+
             for (int i = 0; i < Count; i++)
             {
                 int x = i % Columns * tileWidth;
                 int y = i / Columns * tileHeight;
-                _tiles![i] = new TextureRegion(textureRegion.Texture!, textureRegion.SourceRectangle.X + x, textureRegion.SourceRectangle.Y + y, tileWidth, tileHeight);
+                _tiles[i] = new TextureRegion(textureRegion.Texture!, textureRegion.SourceRectangle.X + x, textureRegion.SourceRectangle.Y + y, tileWidth, tileHeight);
             }
         }
 
@@ -58,7 +60,7 @@
         /// <param name="index">The index of the texture region in this tile set.</param>
         /// <returns>The texture region for the tile from this tileset at the given index.</returns>
         public TextureRegion GetTile(int index) => 
-            _tiles![index];
+            _tiles[index];
 
         /// <summary>
         /// Gets the texture region for the tile from this tileset at the given location.
