@@ -38,7 +38,10 @@ namespace DungeonSlime
         private SoundEffect? _bounceSoundEffect;
 
         // The sound effect to play when the slime eats the bat.
-        private SoundEffect? _collectSoundEffect; 
+        private SoundEffect? _collectSoundEffect;
+
+        // The background theme song.
+        private Song _themeSong;
 
         public Game1() : base("Dungeon Slime", 1280, 720, false)
         {
@@ -68,6 +71,9 @@ namespace DungeonSlime
 
             // Assign the initial random velocity to the bat.
             AssignRandomBatVelocity();
+
+            // Start playing the background music.
+            Audio.PlaySong(_themeSong);
         }
 
         protected override void LoadContent()
@@ -94,19 +100,7 @@ namespace DungeonSlime
             _collectSoundEffect = Content.Load<SoundEffect>("Audio/collect");
 
             // Load the background theme music.
-            Song theme = Content.Load<Song>("Audio/theme");
-
-            // Ensure media player is not already playing on device, if so stop it.
-            if (MediaPlayer.State == MediaState.Playing)
-            {
-                MediaPlayer.Stop();
-            }
-
-            // Play the background theme music.
-            MediaPlayer.Play(theme);
-
-            // Set the theme music to repeat.
-            MediaPlayer.IsRepeating = true;
+            _themeSong = Content.Load<Song>("Audio/theme");
         }
 
         protected override void Update(GameTime gameTime)
@@ -193,7 +187,7 @@ namespace DungeonSlime
                 _batVelocity = Vector2.Reflect(_batVelocity, normal);
 
                 // Play the bounce sound effect.
-                _bounceSoundEffect!.Play();
+                Audio.PlaySoundEffect(_bounceSoundEffect);
             }
 
             _batPosition = newBatPosition;
@@ -212,7 +206,7 @@ namespace DungeonSlime
                 AssignRandomBatVelocity();
 
                 // Play the collect sound effect.
-                _collectSoundEffect!.Play();
+                Audio.PlaySoundEffect(_collectSoundEffect);
             }
 
             base.Update(gameTime);
@@ -263,6 +257,26 @@ namespace DungeonSlime
             if (Input.Keyboard.IsKeyDown(Keys.D) || Input.Keyboard.IsKeyDown(Keys.Right))
             {
                 _slimePosition.X += speed;
+            }
+
+            // If the M key is pressed, toggle mute state for audio.
+            if (Input.Keyboard.WasKeyJustPressed(Keys.M))
+            {
+                Audio.ToggleMute();
+            }
+
+            // If the + button is pressed, increase the volume.
+            if (Input.Keyboard.WasKeyJustPressed(Keys.Add))
+            {
+                Audio.SongVolume += 0.1f;
+                Audio.SoundEffectVolume += 0.1f;
+            }
+
+            // If the - button is pressed, decrease the volume.
+            if (Input.Keyboard.WasKeyJustPressed(Keys.Subtract))
+            {
+                Audio.SongVolume -= 0.1f;
+                Audio.SoundEffectVolume -= 0.1f;
             }
         }
 

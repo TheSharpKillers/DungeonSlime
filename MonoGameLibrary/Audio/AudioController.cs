@@ -221,7 +221,7 @@ namespace MonoGameLibrary.Audio
         {
             // Restores the previous volume values.
             MediaPlayer.Volume = _previousSongVolume;
-            SoundEffect.MasterVolume -= _previousSoundEffectVolume;
+            SoundEffect.MasterVolume = _previousSoundEffectVolume;
 
             IsMuted = false;
         }
