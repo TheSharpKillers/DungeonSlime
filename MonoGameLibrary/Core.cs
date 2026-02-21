@@ -49,7 +49,7 @@ namespace MonoGameLibrary
         /// <summary>
         /// Gets a reference to the audio control system.
         /// </summary>
-        public static AudioController Audio { get; private set; }
+        public static AudioController? Audio { get; private set; }
 
         /// <summary>
         /// Creates a new Core instance.
@@ -116,7 +116,7 @@ namespace MonoGameLibrary
         protected override void UnloadContent()
         {
             // Dispose of the audio controller.
-            Audio.Dispose();
+            Audio!.Dispose();
 
             base.UnloadContent();
         }
@@ -127,7 +127,7 @@ namespace MonoGameLibrary
             Input!.Update(gameTime);
 
             // Update the ausio controller.
-            Audio.Update();
+            Audio!.Update();
 
             if (ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape))
             {

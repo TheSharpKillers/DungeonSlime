@@ -41,7 +41,19 @@ namespace DungeonSlime
         private SoundEffect? _collectSoundEffect;
 
         // The background theme song.
-        private Song _themeSong;
+        private Song? _themeSong;
+
+        // The SpriteFont Description used to draw text.
+        private SpriteFont? _font;
+
+        // Tracks the player score.
+        private int _score;
+
+        // Defines the position to draw the score text at.
+        private Vector2 _scoreTextPosition;
+
+        // Defines the origin used when drawing the score text.
+        private Vector2 _scoreTextOrigin;
 
         public Game1() : base("Dungeon Slime", 1280, 720, false)
         {
@@ -73,7 +85,15 @@ namespace DungeonSlime
             AssignRandomBatVelocity();
 
             // Start playing the background music.
-            Audio.PlaySong(_themeSong);
+            Audio!.PlaySong(_themeSong!);
+
+            // Set the position of the score text to align to the left edge of the 
+            // room bounds, and to vertically be at the center of the first tile.
+            _scoreTextPosition = new Vector2(_roomBounds.Left, _tilemap.TileHeight * 0.5f);
+
+            // Set the origin of the text so it is left-centered.
+            float scoreTextYOrigin = _font!.MeasureString("Score").Y * 0.5f;
+            _scoreTextOrigin = new Vector2(0, scoreTextYOrigin);
         }
 
         protected override void LoadContent()
@@ -101,6 +121,9 @@ namespace DungeonSlime
 
             // Load the background theme music.
             _themeSong = Content.Load<Song>("Audio/theme");
+
+            // Load the font.
+            _font = Content.Load<SpriteFont>("Fonts/04B_30");
         }
 
         protected override void Update(GameTime gameTime)
@@ -187,7 +210,7 @@ namespace DungeonSlime
                 _batVelocity = Vector2.Reflect(_batVelocity, normal);
 
                 // Play the bounce sound effect.
-                Audio.PlaySoundEffect(_bounceSoundEffect);
+                Audio!.PlaySoundEffect(_bounceSoundEffect!);
             }
 
             _batPosition = newBatPosition;
@@ -206,7 +229,10 @@ namespace DungeonSlime
                 AssignRandomBatVelocity();
 
                 // Play the collect sound effect.
-                Audio.PlaySoundEffect(_collectSoundEffect);
+                Audio!.PlaySoundEffect(_collectSoundEffect!);
+
+                // Increase the player's score.
+                _score += 100;
             }
 
             base.Update(gameTime);
@@ -262,20 +288,20 @@ namespace DungeonSlime
             // If the M key is pressed, toggle mute state for audio.
             if (Input.Keyboard.WasKeyJustPressed(Keys.M))
             {
-                Audio.ToggleMute();
+                Audio!.ToggleMute();
             }
 
             // If the + button is pressed, increase the volume.
             if (Input.Keyboard.WasKeyJustPressed(Keys.Add))
             {
-                Audio.SongVolume += 0.1f;
+                Audio!.SongVolume += 0.1f;
                 Audio.SoundEffectVolume += 0.1f;
             }
 
             // If the - button is pressed, decrease the volume.
             if (Input.Keyboard.WasKeyJustPressed(Keys.Subtract))
             {
-                Audio.SongVolume -= 0.1f;
+                Audio!.SongVolume -= 0.1f;
                 Audio.SoundEffectVolume -= 0.1f;
             }
         }
@@ -295,6 +321,19 @@ namespace DungeonSlime
 
             // Draw the bat sprite.
             _bat!.Draw(SpriteBatch, _batPosition);
+
+            // Draw the score.
+            SpriteBatch.DrawString(
+                _font,              // SpriteFont
+                $"Score: {_score}", // text
+                _scoreTextPosition, // position
+                Color.White,        // color
+                0.0f,               // rotation
+                _scoreTextOrigin,   // origin
+                1.0f,               // scale
+                SpriteEffects.None, // effects
+                0.0f                // LayerDepth
+            );
 
             // Always end the sprite batch when finished.
             SpriteBatch.End();
