@@ -36,6 +36,43 @@ namespace MonoGameLibrary.Scenes
         ~Scene() => Dispose(false);
 
         /// <summary>
+        /// Initializes the scene.
+        /// </summary>
+        /// <remarks>
+        /// When overriding this in a derived class, ensure that base.Initialize()
+        /// still called as this when LoadContent is called. 
+        /// </remarks>
+        public virtual void Initialize()
+        {
+            LoadContent();
+        }
+
+        /// <summary>
+        /// Override to provide logic to load content for the scene.
+        /// </summary>
+        public virtual void LoadContent() { }
+
+        /// <summary>
+        /// Unloads scene-specific content.
+        /// </summary>
+        public virtual void UnloadContent()
+        {
+            Content.Unload();
+        }
+
+        /// <summary>
+        /// Updates this scene.
+        /// </summary>
+        /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
+        public virtual void Update(GameTime gameTime) { }
+
+        /// <summary>
+        /// Draws this scene.
+        /// </summary>
+        /// <param name="gameTime">A sbapshot of the timing values for the current frame.</param>
+        public virtual void Draw(GameTime gameTime) { }
+
+        /// <summary>
         /// Disposes of this scene.
         /// </summary>
         public void Dispose()
