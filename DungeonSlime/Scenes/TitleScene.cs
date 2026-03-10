@@ -7,6 +7,8 @@ using MonoGameGum;
 using Gum.Forms.Controls;
 using MonoGameGum.GueDeriving;
 using Microsoft.Xna.Framework.Audio;
+using DungeonSlime.UI;
+using MonoGameLibrary.Graphics;
 
 namespace DungeonSlime.Scenes
 {
@@ -55,8 +57,11 @@ namespace DungeonSlime.Scenes
         private SoundEffect _uiSoundEffect = null!;
         private Panel _titleScreenButtonsPanel = null!;
         private Panel _optionsPanel = null!;
-        private Button _optionsButton = null!;
-        private Button _optionsBackButton = null!;
+        private AnimatedButton _optionsButton = null!;
+        private AnimatedButton _optionsBackButton = null!;
+
+        // Reference to the texture atlas that we can pass to UI elements when they are created
+        private TextureAtlas _atlas = null!;
 
         public override void Initialize()
         {
@@ -104,6 +109,9 @@ namespace DungeonSlime.Scenes
 
             // Load the sound effect to play when the ui action occur.
             _uiSoundEffect = Core.Content.Load<SoundEffect>("Audio/ui");
+
+            // Load the texture atlas from the xml configuartion file
+            _atlas = TextureAtlas.FromFile(Core.Content, "Images/atlas-definition.xml");
         }
 
         public override void Update(GameTime gameTime)
@@ -171,20 +179,18 @@ namespace DungeonSlime.Scenes
             _titleScreenButtonsPanel.Dock(Gum.Wireframe.Dock.Fill);
             _titleScreenButtonsPanel.AddToRoot();
 
-            Button startButton = new Button();
+            AnimatedButton startButton = new AnimatedButton(_atlas);
             startButton.Anchor(Gum.Wireframe.Anchor.BottomLeft);
             startButton.X = 50;
             startButton.Y = -12;
-            startButton.Width = 70;
             startButton.Text = "Start";
             startButton.Click += HandleStartClicked!;
             _titleScreenButtonsPanel.AddChild(startButton);
 
-            _optionsButton = new Button();
+            _optionsButton = new AnimatedButton(_atlas);
             _optionsButton.Anchor(Gum.Wireframe.Anchor.BottomRight);
             _optionsButton.X = -50;
             _optionsButton.Y = -12;
-            _optionsButton.Width = 70;
             _optionsButton.Text = "Options";
             _optionsButton.Click += HandleOptionsClicked!;
             _titleScreenButtonsPanel.AddChild(_optionsButton);
@@ -227,15 +233,14 @@ namespace DungeonSlime.Scenes
             optionsText.X = 10;
             optionsText.Y = 10;
             optionsText.Text = "OPTIONS";
+            optionsText.UseCustomFont = true;
+            optionsText.FontScale = 0.5f;
+            optionsText.CustomFontFile = @"fonts/04b_30.fnt";
             _optionsPanel.AddChild(optionsText);
 
-            Label musicLabel = new Label();
-            musicLabel.Text = "Music";
-            musicLabel.X = 35;
-            musicLabel.Y = 35;
-            _optionsPanel.AddChild(musicLabel);
-
-            Slider musicSlider = new Slider();
+            OptionsSlider musicSlider = new OptionsSlider(_atlas);
+            musicSlider.Name = "MusicSlider";
+            musicSlider.Text = "MUSIC";
             musicSlider.Anchor(Gum.Wireframe.Anchor.Top);
             musicSlider.Y = 30f;
             musicSlider.Minimum = 0;
@@ -247,25 +252,22 @@ namespace DungeonSlime.Scenes
             musicSlider.ValueChangeCompleted += HandleMusicSliderValueChangeCompleted!;
             _optionsPanel.AddChild(musicSlider);
 
-            Label sfxLabel = new Label();
-            sfxLabel.Text = "SFX";
-            sfxLabel.X = 20;
-            sfxLabel.Y = 80;
-            _optionsPanel.AddChild(sfxLabel);
-
-            Slider sfxSlider = new Slider();
+            OptionsSlider sfxSlider = new OptionsSlider(_atlas);
+            sfxSlider.Name = "SfxSlider";
+            sfxSlider.Text = "SFX";
             sfxSlider.Anchor(Gum.Wireframe.Anchor.Top);
-            sfxSlider.Y = 93f;
+            sfxSlider.Y = 93;
             sfxSlider.Minimum = 0;
             sfxSlider.Maximum = 1;
-            sfxSlider.Value = Core.Audio!.SoundEffectVolume;
+            sfxSlider.Value = Core.Audio.SoundEffectVolume;
             sfxSlider.SmallChange = .1;
             sfxSlider.LargeChange = .2;
             sfxSlider.ValueChanged += HandleSfxSliderChanged!;
             sfxSlider.ValueChangeCompleted += HandleSfxSliderChangeCompleted!;
             _optionsPanel.AddChild(sfxSlider);
+            _optionsPanel.AddChild(sfxSlider);
 
-            _optionsBackButton = new Button();
+            _optionsBackButton = new AnimatedButton(_atlas);
             _optionsBackButton.Text = "BACK";
             _optionsBackButton.Anchor(Gum.Wireframe.Anchor.BottomRight);
             _optionsBackButton.X = -28f;
