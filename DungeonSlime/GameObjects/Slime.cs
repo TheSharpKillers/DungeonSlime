@@ -23,7 +23,7 @@ namespace DungeonSlime.GameObjects
         private float _stride;
 
         // Tracks the segments of the slime chain.
-        private List<SlimeSegment> _segments;
+        private List<SlimeSegment> _segments = null!;
 
         // The AnimatedSprite used when drawing each slime segment.
         private AnimatedSprite _sprite;
@@ -31,6 +31,35 @@ namespace DungeonSlime.GameObjects
         /// <summary>
         /// Event that is raised if it is detected that the head segment of the slime has collided with a body segment.
         /// </summary>
-        public event EventHandler BodyCollision;
+        public event EventHandler BodyCollision = null!;
+
+        public Slime(AnimatedSprite sprite)
+        {
+            _sprite = sprite;
+        }
+
+        public void Initialize(Vector2 startingPosition, float stride)
+        {
+            // Initialize the segment collection
+            _segments = new List<SlimeSegment>();
+
+            // Set the stride
+            _stride = stride;
+
+            // Create the initial head of the slime chain
+            SlimeSegment head = new SlimeSegment();
+            head.At = startingPosition;
+            head.To = startingPosition + new Vector2(_stride, 0);
+            head.Direction = Vector2.UnitX;
+
+            // Add it to the segment collection
+            _segments.Add(head);
+
+            // Set the initial next direction as the same direction the head is moving
+            _nextDirection = head.Direction;
+
+            // Zero out the movement timer
+            _movementTimer = TimeSpan.Zero;
+        }
     }
 }
