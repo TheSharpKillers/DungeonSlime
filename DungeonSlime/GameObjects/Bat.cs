@@ -63,7 +63,7 @@ namespace DungeonSlime.GameObjects
                 newPosition.X += normal.X * (_sprite.Width * 0.1f);
             }
 
-            if (normal.X != 0)
+            if (normal.Y != 0)
             {
                 // We are bouncing off a horizontal wall (top/bottom)
                 // Move slightly away from the wall in the direction of the normal
