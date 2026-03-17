@@ -23,5 +23,11 @@ namespace DungeonSlime.GameObjects
         /// Gets or Sets the position of the bat.
         /// </summary>
         public Vector2 Position { get; set; }
+
+        public Bat(AnimatedSprite sprite, SoundEffect bounceSoundEffect)
+        {
+            _sprite = sprite;
+            _bounceSoundEffect = bounceSoundEffect;
+        }
     }
 }
