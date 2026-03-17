@@ -319,6 +319,8 @@ namespace DungeonSlime.UI
         public void HideGameOverPanel()
         {
             _gameOverPanel.IsVisible = false;
+
+            UpdateScoreText(0);
         }
 
         /// <summary>

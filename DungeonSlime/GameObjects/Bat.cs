@@ -60,14 +60,14 @@ namespace DungeonSlime.GameObjects
             {
                 // We are bouncing off a vertical wall (left/right)
                 // Move slightly away from the wall in the direction of the normal
-                newPosition.X = normal.X * (_sprite.Width * 0.1f);
+                newPosition.X += normal.X * (_sprite.Width * 0.1f);
             }
 
             if (normal.X != 0)
             {
                 // We are bouncing off a horizontal wall (top/bottom)
                 // Move slightly away from the wall in the direction of the normal
-                newPosition.Y = normal.Y * (_sprite.Height * 0.1f);
+                newPosition.Y += normal.Y * (_sprite.Height * 0.1f);
             }
 
             // Apply the new position
